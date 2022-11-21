@@ -1,0 +1,25 @@
+#######################################
+# Syntax Coloring Map For Keyboard
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin		KEYWORD2
+run		KEYWORD2
+getDeviceCount	KEYWORD2
+getBattery	KEYWORD2
+getID		KEYWORD2
+getDataID	KEYWORD2
+getMuscleLevel	KEYWORD2
+getSpectrum	KEYWORD2
+getRawData	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
