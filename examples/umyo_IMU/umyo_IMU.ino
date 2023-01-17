@@ -18,6 +18,8 @@ void setup() {
   uMyo.begin(rf_cs, rf_cen);
 }
 
+uint32_t last_print_ms = 0;
+
 void loop() 
 {
   uMyo.run(); //need to call this really often, therefore
