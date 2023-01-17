@@ -55,8 +55,6 @@ private:
 	int device_count;
 	uint8_t idToIdx(uint32_t id);
 	uint8_t swapbits(uint8_t a);
-	float asin_f(float x);
-	float atan2_f(float y, float x);
 public:
 	uMyo_RF24_(void);
 	void begin(int pin_cs, int pin_ce);
