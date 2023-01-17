@@ -131,9 +131,17 @@ void uMyo_RF24_::run()
 
 	uint8_t ppos = 6;
 	devices[u].batt_mv = 2000 + 10 * in_pack[ppos++];
+	int muscle_avg = 0;
 	for(uint8_t x = 0; x < 4; x++)
 	{
-		devices[u].cur_spectrum[x] = (in_pack[ppos]<<8)|in_pack[ppos+1];
+		if(x == 0)
+		{
+			devices[u].cur_spectrum[x] = in_pack[ppos]<<8;
+			uint16_t muscle_avg = in_pack[ppos+1];
+			devices[u].device_avg_muscle_level = (muscle_avg*muscle_avg)>>3;
+		}
+		else
+			devices[u].cur_spectrum[x] = (in_pack[ppos]<<8)|in_pack[ppos+1];
 		ppos += 2;
 	}
 	int16_t w, x, y, z;
@@ -179,6 +187,11 @@ float uMyo_RF24_::getMuscleLevel(uint8_t devidx)
 	if(devidx >= device_count) return 0;
 	float lvl = devices[devidx].cur_spectrum[2] + 2*devices[devidx].cur_spectrum[3];
 	return lvl;
+}
+float uMyo_RF24_::getAverageMuscleLevel(uint8_t devidx)
+{
+	if(devidx >= device_count) return 0;
+	return devices[devidx].device_avg_muscle_level;
 }
 void uMyo_RF24_::getSpectrum(uint8_t devidx, float *spectrum)
 {

@@ -29,7 +29,7 @@ void loop()
   //no long delays can be used in the code
   int dev_count = uMyo.getDeviceCount(); //if more than one device is present, show all of them
   float muscle_level = 0;
-  if(dev_count > 0) muscle_level = uMyo.getMuscleLevel(0); //take data from the 1st connected device if more than 1 is connected
+  if(dev_count > 0) muscle_level = uMyo.getAverageMuscleLevel(0); //take data from the 1st connected device if more than 1 is connected
   float max_level = 600; //defines sensitivity - the lower is maximum, the less effort is needed to fill all LEDs
   int active_leds = NUM_LEDS * muscle_level / max_level;
   int brightness = 150;
