@@ -46,7 +46,7 @@ uint8_t uMyo_RF24_::swapbits(uint8_t a)
 
 void uMyo_RF24_::begin(int pin_cs, int pin_ce)
 {
-	rf = new RF24(pin_ce, pin_cs);
+	rf = new RF24(pin_ce, pin_cs, 1000000);
 	uint8_t pipe_rx[8] = {0x0E, 0xE6, 0x0D, 0xA7, 0, 0, 0, 0};
 	for(int x = 0; x < 8; x++) //nRF24 and uMyo have different bit order for pipe address
 		pipe_rx[x] = swapbits(pipe_rx[x]);
@@ -62,6 +62,7 @@ void uMyo_RF24_::begin(int pin_cs, int pin_ce)
 	rf->openReadingPipe(0, pipe_rx);
 	rf->setCRCLength(RF24_CRC_DISABLED);
 	rf->disableCRC();
+//	rf->printDetails();
 	rf->startListening(); //listen for uMyo data
 //	Serial.println("uMyo lib init");
 }
