@@ -64,7 +64,9 @@ void uMyo_RF24_::begin(int pin_cs, int pin_ce)
 	rf->disableCRC();
 //	rf->printDetails();
 	rf->startListening(); //listen for uMyo data
+	rf->printDetails(); 
 //	Serial.println("uMyo lib init");
+	protocol_version = 3; //set as default for newer devices
 }
 
 uint8_t uMyo_RF24_::idToIdx(uint32_t id)
@@ -164,6 +166,10 @@ void uMyo_RF24_::run()
 		else devices[u].raw_data[1+x] = devices[u].raw_data[0] + in_pack[ppos++];
 	}
 }
+void uMyo_RF24_::setProtocolVersion(int version)
+{
+	protocol_version = version;
+}
 uint8_t uMyo_RF24_::getDeviceCount()
 {
 	return device_count;
@@ -186,13 +192,14 @@ uint8_t uMyo_RF24_::getDataID(uint8_t devidx)
 float uMyo_RF24_::getMuscleLevel(uint8_t devidx)
 {
 	if(devidx >= device_count) return 0;
-	float lvl = devices[devidx].cur_spectrum[2] + 2*devices[devidx].cur_spectrum[3];
-	return lvl;
+	if(protocol_version < 3) return devices[devidx].cur_spectrum[2] + 2*devices[devidx].cur_spectrum[3];
+	return devices[devidx].device_avg_muscle_level;
 }
-float uMyo_RF24_::getAverageMuscleLevel(uint8_t devidx)
+float uMyo_RF24_::getMomentaryMuscleLevel(uint8_t devidx)
 {
 	if(devidx >= device_count) return 0;
-	return devices[devidx].device_avg_muscle_level;
+	float lvl = devices[devidx].cur_spectrum[2] + 2*devices[devidx].cur_spectrum[3];
+	return lvl;
 }
 void uMyo_RF24_::getSpectrum(uint8_t devidx, float *spectrum)
 {
