@@ -1,7 +1,9 @@
 = uMyo Library for Arduino =
 
 This library allows to receive data from uMyo devices using nRF24 radio module
-with the help of RF24 library, providing data parsing and simple data access
+AND starting from version 1.1.x also any nRF52840-based Arduino boards with the help of 
+either RF24 library for nRF24 module, or with the help of nrf_to_nrf library for nRF52840
+based boards, providing data parsing and simple data access
 
 == License ==
 
