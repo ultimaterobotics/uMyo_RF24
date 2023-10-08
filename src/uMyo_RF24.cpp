@@ -18,7 +18,11 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include <SPI.h>
-#include <RF24.h>
+#if defined (NRF52)
+  #include <nrf_to_nrf.h>
+#else
+  #include <RF24.h>
+#endif
 #include "uMyo_RF24.h"
 
 uMyo_RF24_::uMyo_RF24_(void)
@@ -44,15 +48,27 @@ uint8_t uMyo_RF24_::swapbits(uint8_t a)
     return v;
 }
 
+void uMyo_RF24_::begin(){
+  begin(0,0);
+}
+
 void uMyo_RF24_::begin(int pin_cs, int pin_ce)
 {
-	rf = new RF24(pin_ce, pin_cs, 1000000);
+    #if defined (NRF52)
+      rf = new nrf_to_nrf;
+    #else
+      rf = new RF24(pin_ce, pin_cs, 1000000);
+    #endif
 	uint8_t pipe_rx[8] = {0x0E, 0xE6, 0x0D, 0xA7, 0, 0, 0, 0};
 	for(int x = 0; x < 8; x++) //nRF24 and uMyo have different bit order for pipe address
 		pipe_rx[x] = swapbits(pipe_rx[x]);
 
 	rf->begin();
-	rf->setDataRate(RF24_1MBPS);
+	#if defined (NRF52)
+	  rf->setDataRate(NRF_1MBPS);
+	#else
+	  rf->setDataRate(RF24_1MBPS);
+	#endif
 	rf->setAddressWidth(4);
 	rf->setChannel(83);
 	rf->setRetries(0, 0);
@@ -60,8 +76,12 @@ void uMyo_RF24_::begin(int pin_cs, int pin_ce)
 	rf->disableDynamicPayloads();
 	rf->setPayloadSize(32);
 	rf->openReadingPipe(0, pipe_rx);
-	rf->setCRCLength(RF24_CRC_DISABLED);
-	rf->disableCRC();
+    #if defined (NRF52)
+	  rf->setCRCLength(NRF_CRC_DISABLED);
+    #else
+      rf->setCRCLength(RF24_CRC_DISABLED);
+      rf->disableCRC();
+    #endif
 //	rf->printDetails();
 	rf->startListening(); //listen for uMyo data
 	rf->printDetails(); 
